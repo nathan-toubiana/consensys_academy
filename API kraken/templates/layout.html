@@ -1,0 +1,22 @@
+<!doctype html> <html lang="en">
+<head>
+{% block head %}
+<title>Web App</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+{% endblock %} </head>
+<body>
+<div class=header>
+
+<div id="content">
+    <img src="{{ url_for('static',filename='Two-Bitcoins.jpg') }}" style="width: 0% height: 0%"/>
+</div>
+<h1>In XXBTZEUR we trust</h1>
+
+</div>
+<div class=page>
+{% block content %}{% endblock %} </div>
+<div class=footer>
+{% block footer %}
+<span>Arthur, Nathan, Nicolas</span>
+<span>Copyright 2017 tu connayyy </span>
+{% endblock %} </div>
