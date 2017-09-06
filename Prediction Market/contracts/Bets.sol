@@ -4,12 +4,12 @@ import "./TrustedSolver.sol";
 
 contract Bets is TrustedSolver {
     
-    event LogNewBet(address gambler, string question, uint amount, bool predicted_outcome);
+    event LogNewBet(address gambler, bytes32 question, uint amount, bool predicted_outcome);
     event LogWithdrawal(address gambler, uint amount);
 
     struct GamblerStruct {
-        mapping(string => uint) fund;
-        mapping(string => bool) prediction;
+        mapping(bytes32 => uint) fund;
+        mapping(bytes32 => bool) prediction;
                         }
 
     mapping (address =>  GamblerStruct) gamblersStructs;
@@ -18,16 +18,16 @@ contract Bets is TrustedSolver {
         uint yesFunds;
         uint noFunds;
                         }
-    mapping(string =>FundStruct) fundStructs;
+    mapping(bytes32 =>FundStruct) fundStructs;
     
    
     
-    modifier onlyIfStillUndecided(string question) { 
+    modifier onlyIfStillUndecided(bytes32 question) { 
         if(questionOutcomes[question].blockNumber!=0) throw;
         _; 
     }
     
-    function betOnQuestion(string question, bool predicted_outcome) 
+    function betOnQuestion(bytes32 question, bool predicted_outcome) 
         public
         payable
         onlyIfQuestion(question)
@@ -49,7 +49,7 @@ contract Bets is TrustedSolver {
         return true;
     }
     
-    function requestWithdrawal(string question) 
+    function requestWithdrawal(bytes32 question) 
         public
         returns(bool success) 
     {

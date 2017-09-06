@@ -4,16 +4,16 @@ import "./Owned.sol";
 
 contract predictionHub is Owned {
     
-    string[] public questions;
-    mapping(string => bool) questionExists;
+    bytes32[] public questions;
+    mapping(bytes32 => bool) questionExists;
     
-    modifier onlyIfQuestion(string question) {
+    modifier onlyIfQuestion(bytes32 question) {
         if(questionExists[question] != true) throw;
         _;
     }
     
-    event LogNewQuestion(address sender,string question);
-    event LogQuestionDeleted(address sender, string question);
+    event LogNewQuestion(address sender,bytes32 question);
+    event LogQuestionDeleted(address sender, bytes32 question);
     
     function getQuestionCount()
         public
@@ -23,13 +23,12 @@ contract predictionHub is Owned {
         return questions.length;
     }
     
-    function createQuestion(string question)
+    function createQuestion(bytes32 question)
         onlyOwner
         returns(bool success)
     {
-        
-        questions.push(question);
         if (questionExists[question] == true) throw;
+        questions.push(question);
         questionExists[question] = true;
         LogNewQuestion(msg.sender,question);
         return true;
@@ -37,7 +36,7 @@ contract predictionHub is Owned {
     
     // Pass-through Admin Controls
     
-    function deleteQuestion(string question) 
+    function deleteQuestion(bytes32 question) 
         onlyOwner
         onlyIfQuestion(question)
         returns(bool success)

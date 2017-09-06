@@ -8,9 +8,9 @@ contract TrustedSolver is predictionHub {
     uint blockNumber;
     bool observed_outcome;
 }
-    mapping (string => questionOutcomesStruct) questionOutcomes;
+    mapping (bytes32 => questionOutcomesStruct) questionOutcomes;
     
-    event LogNewDecision(address solver, string question,  bool decided_outcome);
+    event LogNewDecision(address solver, bytes32 question,  bool decided_outcome);
    
    
     modifier onlySolver() { 
@@ -19,7 +19,7 @@ contract TrustedSolver is predictionHub {
     }
     
     
-     function solveQuestion(string question,bool decided_outcome)
+     function solveQuestion(bytes32 question,bool decided_outcome)
         onlySolver
         onlyIfQuestion(question)
         returns(bool success)
