@@ -7,13 +7,18 @@ contract Bets is TrustedSolver {
     event LogNewBet(address gambler, string question, uint amount, bool predicted_outcome);
     event LogWithdrawal(address gambler, uint amount);
 
-    mapping (address =>  mapping(string => uint)) gamblersFundsMapping;
-    mapping (address =>  mapping(string => bool)) gamblersPredictionsMapping;
+    struct GamblerStruct {
+        mapping(string => uint) fund;
+        mapping(string => bool) prediction;
+                        }
+
+    mapping (address =>  GamblerStruct) gamblersStructs;
     
-    mapping(string => uint) yesFunds;
-    mapping(string => uint) noFunds;
-    
-    
+    struct FundStruct {
+        uint yesFunds;
+        uint noFunds;
+                        }
+    mapping(string =>FundStruct) fundStructs;
     
    
     
@@ -31,12 +36,13 @@ contract Bets is TrustedSolver {
     {
         if(msg.value==0) throw;
         uint amount=msg.value;
-        gamblersFundsMapping[msg.sender][question]+= amount;
+
+        gamblersStructs[msg.sender].fund[question]+= amount;
         
         if(predicted_outcome==true) yesFunds[question]+=amount;
          if(predicted_outcome==false) noFunds[question]+=amount;
         
-        gamblersPredictionsMapping[msg.sender][question]= predicted_outcome;
+        gamblersStructs[msg.sender].prediction[question]=predicted_outcome;
         
         LogNewBet(msg.sender, question,  amount,  predicted_outcome);
         
@@ -48,19 +54,19 @@ contract Bets is TrustedSolver {
         returns(bool success) 
     {
         if(questionOutcomes[question].blockNumber==0) throw;
-        if(gamblersFundsMapping[msg.sender][question]==0) throw;
+        if(gamblersStructs[msg.sender].fund[question]==0) throw;
         
-        uint amount = gamblersFundsMapping[msg.sender][question];
-        gamblersFundsMapping[msg.sender][question]=0;
+        uint amount = gamblersStructs[msg.sender].fund[question];
+        gamblersStructs[msg.sender].fund[question]=0;
         
         bool observed_outcome=questionOutcomes[question].observed_outcome;
         
-        bool predicted_outcome=gamblersPredictionsMapping[msg.sender][question];
+        bool predicted_outcome=gamblersStructs[msg.sender].prediction[question];
         
         if(predicted_outcome!=observed_outcome) throw;
         
-        uint yes_amount=yesFunds[question];
-        uint no_amount=noFunds[question];
+        uint yes_amount=fundStructs[question].yesFunds;
+        uint no_amount=fundStructs[question].noFunds;
         
         if(predicted_outcome==true){
             

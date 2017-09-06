@@ -24,7 +24,7 @@ contract predictionHub is Owned {
     }
     
     function createQuestion(string question)
-        public
+        onlyOwner
         returns(bool success)
     {
         
