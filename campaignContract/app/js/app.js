@@ -10,7 +10,7 @@ if (typeof web3 !== 'undefined') {
     window.web3 = new Web3(web3.currentProvider);
 } else {
     // Your preferred fallback.
-    window.web3 = new Web3(new Web3.providers.HttpProvider('http://104.154.91.249:8545'));
+    window.web3 = new Web3(new Web3.providers.HttpProvider('http://130.211.232.134:8545'));
 }
 Promise.promisifyAll(web3.eth, { suffix: "Promise" });
 Promise.promisifyAll(web3.version, { suffix: "Promise" });
